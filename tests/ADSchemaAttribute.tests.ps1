@@ -1,14 +1,9 @@
 
 
 Describe "ADSchema Attribute Functions" {
-    Context "Get-ADSchemaAttribute"{
+    Context "Get-ADSchemaAttribute" {
         It "exists as a function in the module" {
             (Get-Command Get-ADSchemaAttribute).count | should be 1
-        }
-
-        It "has examples in the help" {
-            $help = get-help -Full Get-ADSchemaAttribute
-            $help.examples.example | should not be $null
         }
 
         It "returns a schema object - test use CN Attribute" {
@@ -17,12 +12,12 @@ Describe "ADSchema Attribute Functions" {
 
         It "accepts wildcards" {
             ((Get-ADSchemaAttribute -class User -Attribute c*) | 
-                Where-Object  {$_.Name -eq 'CN'}).count | 
+                    Where-Object {$_.Name -eq 'CN'}).count | 
                 Should Be 1
         }
     }
 
-    Context "New-ADSchemaAttribute"{
+    Context "New-ADSchemaAttribute" {
         It "exists as a function in the module" {
             (Get-Command New-ADSchemaAttribute).count | should be 1
             
