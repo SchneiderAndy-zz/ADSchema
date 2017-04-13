@@ -1,0 +1,3 @@
+Function New-ADSchemaClass {
+
+}
