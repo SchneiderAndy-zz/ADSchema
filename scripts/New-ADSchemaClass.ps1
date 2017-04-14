@@ -49,9 +49,9 @@ Function New-ADSchemaClass {
             objectClassCategory = $ObjectCategory
             systemOnly =  $FALSE
             # subclassOf: top
-            subclassOf = 2.5.6.0
+            subclassOf = "2.5.6.0"
             # rdnAttId: cn
-            rdnAttId = 2.5.4.3
+            rdnAttId = "2.5.4.3"
         }
     
         $ConfirmationMessage = "$Name in $schemaPath. This cannot be undone"
@@ -67,3 +67,5 @@ Function New-ADSchemaClass {
     END {}
     
 }
+
+#New-ADSchemaClass -Name asTestClass -LDAPDisplayName asTestClass -Category Auxiliary -AdminDisplayName asTestClass -AdminDescription asTestClass -AttributeID (new-adschematestOID) 
