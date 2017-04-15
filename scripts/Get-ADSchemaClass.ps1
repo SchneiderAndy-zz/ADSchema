@@ -1,12 +1,18 @@
 <#
-.Synopsis
+.SYNOPSIS
    Gets classes in an AD Schema
+
 .DESCRIPTION
-   Gets classes in an AD Schema
+   Use this function to list  or search for existing classes in the Active Directory Schema
+
+.PARAMETER Class
+  The name of the class you want to search for. Supports wildcards
+
 .EXAMPLE
    Get-ADSchemaClass -Name User
+   
 .EXAMPLE
-   Get-ADSchemaClass User
+   Get-ADSchemaClass com*
 #>
 Function Get-ADSchemaClass {
     param(
