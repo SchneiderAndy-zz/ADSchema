@@ -78,7 +78,9 @@ Function New-ADSchemaClass {
     
         $ConfirmationMessage = "$Name in $schemaPath. This cannot be undone"
         $Caption = 'Adding a new class to Active Directory Schema'
-    
+        if($AttributeID.StartsWith('1.2.840.113556.1.8000.2554')){
+           Write-Warning 'You are using a test OID. For Production use, use an OID with your registered PEN. See help about_adschema for more details. ' 
+        }
         if ($PSCmdlet.ShouldProcess($ConfirmationMessage, $Caption)) {
             New-ADObject -Name $Name -Type 'classSchema' -Path $schemapath -OtherAttributes $attributes  
         }
