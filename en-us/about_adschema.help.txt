@@ -13,7 +13,7 @@ LONG DESCRIPTION
     cannot be undone. Attributes in AD can be disabled, but they cannot be deleted.
 
     Most of the time, an AD Administrator will want to add a handful of attributes to either user or computer
-    objects for some reason or another. Maybe you want to store a computers warranty expiration  date in AD 
+    objects for some reason or another. Maybe you want to store a computer's warranty expiration  date in AD 
     or you want to put some data you have in your HR System in AD for users, but there isn't a good fit with 
     the out of the box attributes. Attributes should typically be named with a prefix. If I was creating a 
     warranty expiration attribute for my computers, I would use soemthing like as-warrantyDate. 
@@ -31,16 +31,12 @@ LONG DESCRIPTION
     http://pen.iana.org/pen/PenApplication.page. 
 
 EXAMPLES
-    $oid = New-ADSchemaTestOID
-    $oid2 = New-ADSchemaTestOID
-    $attribute = New-ADSchemaAttribute -name asFavoriteColor -AttributeID $oid 
-    $class = New-ADSchemaClass -name asPerson -AttributeID $oid2
-    Add-ADSchemaAuxiliaryClass -AuxiliaryClass $class -Class $class 
-    Add-ADSchemaAttributeToClass -attribute $attribute -Class $class
-
+   New-ADSchemaAttribute -Name asFavColor -Description 'User Favorite Color' -AttributeType String
+   New-ADSchemaClass asPerson -AdminDescription 'Person Class to host custom attributes' -Category Auxiliary
+   Add-ADSchemaAttributeToClass -Attribute asFavColor -Class asPerson
+   Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asPerson -Class user 
+   Set-ADuser andy -add @{'asFavColor' = 'blue'}
+   Get-ADuser andy -properties asFavColor
 
 KEYWORDS
     AD ActiveDirectory Schema
-
-SEE ALSO
-    Text-only references for further reading. Hyperlinks cannot work in the Windows PowerShell console. 
