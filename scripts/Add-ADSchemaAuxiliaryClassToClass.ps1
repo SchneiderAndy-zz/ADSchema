@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Adds an attribute to a class
+    Adds an auxiliary class to class
 
 .DESCRIPTION
     Add a new custom class to an existing structural class in AD. For example,
@@ -18,13 +18,19 @@
 .EXAMPLE
     PS> Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User
     Set the asTest class as an aux class of the User class.
+
 #>
-Function Add-ADSchemaAttributeToClass {
-param(
-    $Attribute,
-    $Class
-)
+Function Add-ADSchemaAuxiliaryClassToClass {
+    param(
+        [Parameter()]
+        $AuxiliaryClass,
+
+        [Parameter()]
+        $Class
+    )
+
     $schemaPath = (Get-ADRootDSE).schemaNamingContext  
-    $Schema = get-adobject -SearchBase $schemapath -Filter "name -eq `'$Class`'"
-    $Schema | Set-ADObject -Add @{mayContain = $Attribute}
+    $auxClass = get-adobject -SearchBase $schemapath -Filter "name -eq `'$AuxiliaryClass`'" -Properties governsID
+    $classToAddTo  = get-adobject -SearchBase $schemapath -Filter "name -eq `'$Class`'"
+    $classToAddTo | Set-ADObject -Add @{auxiliaryClass = $($auxClass.governsID)}
 }

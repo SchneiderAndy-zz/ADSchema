@@ -6,7 +6,7 @@
 .EXAMPLE
    Get-ADSchemaAttribute -class User -Attribute c*
 .EXAMPLE
-   Another example of how to use this cmdlet
+   Get-ADSchemaAttribute -class asTestClass -attribute asFavoriteColor
 #>
 Function Get-ADSchemaAttribute {
     param(

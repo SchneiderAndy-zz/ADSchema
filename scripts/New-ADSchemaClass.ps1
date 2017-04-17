@@ -1,3 +1,32 @@
+<#
+.SYNOPSIS
+   Create a new class in the Active Directory Schema
+
+.DESCRIPTION
+   New-ADSchemaClass will add a new class to the AD Schema. The majority of
+   the time, any new classes will likely be an Auxiliary Class. It is a best
+   practice to create an auxiliary class and add it as an auxliary class to 
+   an existing class.
+
+.PARAMETER Name
+  The name of the attribute you are creating. This will be the CN and the LDAP
+  Display Name, and Admin Display Name. Using a standard prefix is a good
+  practice to follow.
+
+.PARAMETER AdminDescription
+  This is the description of the class being created. Usually, a 3 or 4 word
+  description is sufficient.
+
+.PARAMETER Category
+  99% of the time, you will chose an Auxiliary class. Becuase of this, the
+  default value is automatically set to Auxililary. Please see 
+  https://technet.microsoft.com/en-us/library/cc961751.aspx for info
+  on other categories if you wish to overwrite.
+
+.EXAMPLE
+  $oid = New-ADSchemaTestOID
+  New-ADSchemaClass -Name asPerson -AdminDescription 'host custom user attributes' -Category Auxiliary -AttributeID $oid
+#>
 Function New-ADSchemaClass {
 
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
@@ -7,19 +36,12 @@ Function New-ADSchemaClass {
         $Name,
 
         [Parameter(Mandatory, ValueFromPipelinebyPropertyName)]
-        [Alias('DisplayName')]
-        $LDAPDisplayName,
-
-        [Parameter(Mandatory, ValueFromPipelinebyPropertyName)]
-        $AdminDisplayName,
-
-        [Parameter(Mandatory, ValueFromPipelinebyPropertyName)]
         [Alias('Description')]
         $AdminDescription,
 
-        [Parameter(Mandatory, ValueFromPipelinebyPropertyName)]
+        [Parameter(ValueFromPipelinebyPropertyName)]
         [ValidateSet("Auxiliary","Abstract","Structural","88 Class")]
-        $Category,
+        $Category = 'Auxiliary',
 
         [Parameter(ValueFromPipelinebyPropertyName)]
         [Alias('OID')]
@@ -44,8 +66,8 @@ Function New-ADSchemaClass {
             governsId = $AttributeID
             adminDescription = $AdminDescription
             objectClass =  'classSchema'
-            ldapDisplayName = $LDAPDisplayName
-            adminDisplayName =  $AdminDisplayName
+            ldapDisplayName = $Name
+            adminDisplayName =  $Name
             objectClassCategory = $ObjectCategory
             systemOnly =  $FALSE
             # subclassOf: top
@@ -58,14 +80,10 @@ Function New-ADSchemaClass {
         $Caption = 'Adding a new class to Active Directory Schema'
     
         if ($PSCmdlet.ShouldProcess($ConfirmationMessage, $Caption)) {
-            New-ADObject -Name $Name -Type 'classSchema' -Path $schemapath -OtherAttributes $attributes 
-          #  $userSchema = get-adobject -SearchBase $schemapath -Filter 'name -eq "user"'
-          #  $userSchema | Set-ADObject -Add @{mayContain = $Name}
+            New-ADObject -Name $Name -Type 'classSchema' -Path $schemapath -OtherAttributes $attributes  
         }
     }
 
     END {}
     
 }
-
-#New-ADSchemaClass -Name asTestClass -LDAPDisplayName asTestClass -Category Auxiliary -AdminDisplayName asTestClass -AdminDescription asTestClass -AttributeID (new-adschematestOID) 

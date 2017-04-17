@@ -66,10 +66,10 @@ Function New-ADSchemaAttribute {
         [Parameter(ValueFromPipelinebyPropertyName, ParameterSetName = 'basic')]
         [Alias('SingleValued')]
         [Boolean]
-        $IsSingleValued = $true,
+        $IsSingleValued = $True,
 
         [Parameter(Mandatory, ValueFromPipelinebyPropertyName, ParameterSetName = 'basic')]
-        [ValidateSet('String','DN','Int','GeneralizedTime','Boolean','CaseInsensitiveString')]
+        [ValidateSet('String','DN','Int','GeneralizedTime','Boolean')]
         [String]
         $AttributeType ,
 
