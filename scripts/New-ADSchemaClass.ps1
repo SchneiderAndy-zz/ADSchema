@@ -45,7 +45,7 @@ Function New-ADSchemaClass {
 
         [Parameter(ValueFromPipelinebyPropertyName)]
         [Alias('OID')]
-        $AttributeID 
+        $AttributeID = (New-ADSchemaTestOID)
     )
 
     BEGIN {}
