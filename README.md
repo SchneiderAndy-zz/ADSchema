@@ -1,6 +1,8 @@
 # ADSchema
 A PowerShell Module that can be used to update the schema in Active Directory
 
+# Installation
+`Install-Module ADSchema`
 # Example
 
 ```
