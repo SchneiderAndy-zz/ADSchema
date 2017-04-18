@@ -6,8 +6,6 @@ A PowerShell Module that can be used to update the schema in Active Directory
 # Example
 
 ```
-# Overview
-
 New-ADSchemaAttribute -Name asFavColor -Description 'User Favorite Color' -AttributeType String
 New-ADSchemaClass asPerson -AdminDescription 'Person Class to host custom attributes' -Category Auxiliary
 Add-ADSchemaAttributeToClass -Attribute asFavColor -Class asPerson
@@ -15,6 +13,7 @@ Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asPerson -Class user
 set-aduser andy -add @{'asFavColor' = 'blue'}
 get-aduser andy -properties asFavColor
 ```
+# Overview
 The purpose of this module is to allow users to easily add attributes and classes to the schema of Active Directory. Editing the schema is often a daunting task and requires knowledge of several  details that most people do not think about on a regular basis. 
     
 There is also a lot of fear when it comes to manually adding attributes, because it is a task that cannot be undone. Attributes in AD can be disabled, but they cannot be deleted.
