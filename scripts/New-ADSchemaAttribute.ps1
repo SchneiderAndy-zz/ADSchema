@@ -6,7 +6,7 @@
    New-ADSchemaAttribute will add a new attribute to the AD Schema. Once the new attribute
    is created, you will need to add it to a class. AD Schema best practices suggest
    that you:
-   
+
    1) Create a new Auxiliary Class.
    2) Add your attribute to that class.
    3) Add your Auxiliary Class (containing your new Attribute) to an Existing Class. 
@@ -73,7 +73,7 @@ Function New-ADSchemaAttribute {
         $IsSingleValued = $True,
 
         [Parameter(Mandatory, ValueFromPipelinebyPropertyName, ParameterSetName = 'basic')]
-        [ValidateSet('String','DN','Int','GeneralizedTime','Boolean')]
+        [ValidateSet('String','StringOctet','DN','Int','GeneralizedTime','Boolean')]
         [String]
         $AttributeType ,
 
@@ -100,6 +100,7 @@ Function New-ADSchemaAttribute {
              # based on https://technet.microsoft.com/en-us/library/cc961740.aspx
             switch ($AttributeType) {
                 'String'            {$attributeSyntax = '2.5.5.4';  $omSyntax = 20}
+                'StringOctet'       {$attributeSyntax = '2.5.5.10'; $omSyntax = 4}
                 'DN'                {$attributeSyntax = '2.5.5.1';  $omSyntax = 127}
                 'Int'               {$attributeSyntax = '2.5.5.9';  $omSyntax = 2}
                 'GeneralizedTime'   {$attributeSyntax = '2.5.5.11'; $omSyntax = 24}
