@@ -1,12 +1,12 @@
 <#
 .SYNOPSIS
-    Adds an attribute to a class
+    Adds an attribute to a class.
 
 .DESCRIPTION
-    Add a new custom class to an existing structural class in Active Directory.
+    Add a New Custom Class to an existing Structural Class in Active Directory.
     
     For example if you want to add attributes to the User Class:
-    1. Create a new Auxiliary Class
+    1. Create a new Auxiliary Class.
     2. Add Attributes to that new Auxiliary Class.
     3. Assign the new class as an Auxiliary Class to the User Class.
 
@@ -15,7 +15,7 @@
     This will be an Auxiliary Class of the structural class.
 
 .PARAMETER Class
-    The structural class you are adding an Auxiliary Class to. 
+    The Structural Class you are adding an Auxiliary Class to. 
 
 .EXAMPLE
     PS> Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User

@@ -3,7 +3,7 @@
    Gets classes in an AD Schema
 
 .DESCRIPTION
-   Use this function to list  or search for existing classes in the Active Directory Schema
+   Use this function to list or search for existing classes in the Active Directory Schema
 
 .PARAMETER Class
   The name of the class you want to search for. Supports wildcards
