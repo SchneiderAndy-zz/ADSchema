@@ -5,16 +5,20 @@
 .DESCRIPTION
    New-ADSchemaAttribute will add a new attribute to the AD Schema. Once the new attribute
    is created, you will need to add it to a class. AD Schema best practices suggest
-   that you create a new auxiliary class, add your attribute to that class, and then
-   make your auxiliary class and auxiliary class of the class you want to see the 
-   attribute in. See help about_adschema for more details
+   that you:
+   
+   1) Create a new Auxiliary Class.
+   2) Add your attribute to that class.
+   3) Add your Auxiliary Class (containing your new Attribute) to an Existing Class. 
+   
+   See help about_ADSchema for more details
 
 .PARAMETER Name
   The name of the attribute you are creating. This will be the CN and the LDAP
   Display Name. Using a standard prefix is a good practice to follow.
 
 .PARAMETER Description
-  The admin description is a short description that is added as metadata to the
+  The Administrator description is a short description that is added as metadata to the
   attribute. Should not be much more than 3 or 4 words.
 
 .PARAMETER IsSingleValued
