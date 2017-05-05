@@ -2,7 +2,10 @@
 A PowerShell Module that can be used to update the schema in Active Directory
 
 # Installation
-`Install-Module ADSchema`
+Copy module files to PSModulePath, typically C:\Program Files\WindowsPowerShell\Modules\
+
+In a new PowerShell instance, import the module for use:
+    `Import-Module ADSchema`
 # Example
 
 ```
