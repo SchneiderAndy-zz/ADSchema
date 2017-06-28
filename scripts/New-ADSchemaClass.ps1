@@ -26,6 +26,7 @@
 .EXAMPLE
   $oid = New-ADSchemaTestOID
   New-ADSchemaClass -Name asPerson -AdminDescription 'host custom user attributes' -Category Auxiliary -AttributeID $oid
+  New-ADSchemaClass -Name asPerson -AdminDescription 'host custom user attributes' -Category Auxiliary -AttributeID $oid -$ADLDS $True -ADLDSService myadldsservice:1234
 #>
 Function New-ADSchemaClass {
 
@@ -45,16 +46,31 @@ Function New-ADSchemaClass {
 
         [Parameter(ValueFromPipelinebyPropertyName)]
         [Alias('OID')]
-        $AttributeID = (New-ADSchemaTestOID)
+        $AttributeID = (New-ADSchemaTestOID),
+		
+		[Parameter(Mandatory=$False)]
+		[Boolean]$ADLDS,
+		
+		[Parameter(Mandatory=$False)]
+		[String]$ADLDSService
     )
 
     BEGIN {}
 
     PROCESS {
-  
-        $schemaPath = (Get-ADRootDSE).schemaNamingContext       
-        
-
+		If (!$ADLDS)
+			{
+			$schemaPath = (Get-ADRootDSE).schemaNamingContext       
+			}
+			ElseIf ($ADLDS -eq $True) 
+			{
+				If (!$ADLDSService)
+				{
+					$ADLDSService = 'localhost:389'
+				}
+				$DirectoryContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext([System.DirectoryServices.ActiveDirectory.DirectoryContextType]::DirectoryServer, $ADLDSService)
+				$schemaPath = [System.DirectoryServices.ActiveDirectory.ActiveDirectorySchema]::GetSchema($DirectoryContext)
+			}
         switch ($Category) {
             'Auxiliary'     {$ObjectCategory = 3}
             'Abstract'      {$ObjectCategory = 2}

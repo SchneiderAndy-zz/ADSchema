@@ -84,14 +84,31 @@ Function New-ADSchemaAttribute {
 
         [Parameter(ValueFromPipelineByPropertyName,ParameterSetName = 'advanced')]
         [String]
-        $SchemaAttributeHashTable
+        $SchemaAttributeHashTable,
+		
+		[Parameter(Mandatory=$False)]
+		[Boolean]$ADLDS,
+		
+		[Parameter(Mandatory=$False)]
+		[String]$ADLDSService
     )
 
     BEGIN {}
 
     PROCESS {
-  
+		If (!$ADLDS)
+		{
         $schemaPath = (Get-ADRootDSE).schemaNamingContext       
+		}
+		ElseIf ($ADLDS -eq $True) 
+		{
+			If (!$ADLDSService)
+			{
+				$ADLDSService = 'localhost:389'
+			}
+			$DirectoryContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext([System.DirectoryServices.ActiveDirectory.DirectoryContextType]::DirectoryServer, $ADLDSService)
+			$schemaPath = [System.DirectoryServices.ActiveDirectory.ActiveDirectorySchema]::GetSchema($DirectoryContext)
+		}
         $type = 'attributeSchema'
         if($SchemaAttributeHashTable){
             $attributes = $SchemaAttributeHashTable
