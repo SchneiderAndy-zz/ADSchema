@@ -18,12 +18,24 @@
 .PARAMETER Class
     The structural class you are adding an Auxiliary Class to.. 
 
+.PARAMETER ADLDS
+    Boolean - $True to administer ADLDS 
+
+.PARAMETER ADLDSService
+    Hostname and port in format hostname:port
+    Defaults to localhost:389
+
 .EXAMPLE
-	To administer Active Directory:
-    PS> Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User
-	To administer ADLDS:
+	PS> Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User
+    Active Directory: Set the asTest class as an aux class of the User class.
+
+.EXAMPLE
+	PS> Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User -ADLDS $True
+    ADLDS: Set the asTest class as an aux class of the User class of the default ADLDS instance on localhost:389
+
+.EXAMPLE
 	PS> Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User -ADLDS $True -ADLDSService myadldsservice:1234
-    Set the asTest class as an aux class of the User class.
+    ADLDS: Set the asTest class as an aux class of the User class of an ADLDS instance named myadldsservice:1234
 
 #>
 

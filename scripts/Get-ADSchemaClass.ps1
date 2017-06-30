@@ -8,16 +8,27 @@
 .PARAMETER Class
   The name of the class you want to search for. Supports wildcards
 
+.PARAMETER ADLDS
+    Boolean - $True to administer ADLDS 
+
+.PARAMETER ADLDSService
+    Hostname and port in format hostname:port
+    Defaults to localhost:389
+	
 .EXAMPLE
-	To administer Active Directory:
 	Get-ADSchemaClass -Name User
-	To administer ADLDS:
-	Get-ADSchemaClass -Name User -ADLDS $True -ADLDSService myadldsservice:1234
-.EXAMPLE
-	To administer Active Directory:
+ 	Active Directory: Get the user class
+ .EXAMPLE
 	Get-ADSchemaClass com*
-	To administer ADLDS:
-	Get-ADSchemaClass com* -ADLDS $True -ADLDSService myadldsservice:1234
+	Active Directory: Get classes starting with "com"
+
+.EXAMPLE	
+	Get-ADSchemaClass -Name User -ADLDS $True -ADLDSService myadldsservice:1234
+	ADLDS: Get the user class from the ADLDS instance named myadldsservice:1234
+
+.EXAMPLE	
+	Get-ADSchemaClass -Name User -ADLDS $True
+	ADLDS: Get the user class from the default ADLDS instance on localhost:389
 #>
 Function Get-ADSchemaClass {
         param(

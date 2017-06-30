@@ -18,13 +18,18 @@
     Defaults to localhost:389
 
 .EXAMPLE
-   Get-ADSchemaAttribute -class User -Attribute c*
+    Get-ADSchemaAttribute -class User -Attribute c*
 .EXAMPLE
-   Get-ADSchemaAttribute -class asTestClass -attribute asFavoriteColor
+    Get-ADSchemaAttribute -class asTestClass -attribute asFavoriteColor
 .EXAMPLE
-   Get-ADSchemaAttribute -class User -Attribute c* -ADLDS $True -ADLDSService myadldsservice:1234
+    Get-ADSchemaAttribute -class User -Attribute c* -ADLDS $True -ADLDSService myadldsservice:1234
+    ADLDS: Get all attributes starting with "c" from the user class from the ADLDS instance named myadldsservice:1234
 .EXAMPLE
-   Get-ADSchemaAttribute -class asTestClass -attribute asFavoriteColor -ADLDS $True -ADLDSService myadldsservice:1234
+    Get-ADSchemaAttribute -class asTestClass -attribute asFavoriteColor -ADLDS $True
+    ADLDS: Get the attribute named asFavoriteColor from the class asTestClass from the default ADLDS instance on localhost:389
+.EXAMPLE
+    Get-ADSchemaAttribute -class asTestClass -attribute asFavoriteColor -ADLDS $True -ADLDSService myadldsservice:1234
+    ADLDS: Get the attribute named asFavoriteColor from the class asTestClass from the ADLDS instance named myadldsservice:1234
 #>
 Function Get-ADSchemaAttribute {
     param(
