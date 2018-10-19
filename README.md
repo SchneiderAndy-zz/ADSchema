@@ -25,7 +25,7 @@ In a new PowerShell instance, import the module for use:
    Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User -ADLDS $True
 ```
 # Overview
-The purpose of this module is to allow users to easily add attributes and classes to the schema of Active Directory. Editing the schema is often a daunting task and requires knowledge of several details that most people do not think about on a regular basis. 
+The purpose of this module is to allow users to easily add attributes and classes to the schema of Active Directory or to modify the schema of an ADLDS instance. Editing the schema is often a daunting task and requires knowledge of several details that most people do not think about on a regular basis. 
     
 There is also a lot of fear when it comes to manually adding attributes, because it is a task that cannot be undone. Attributes in AD can be disabled, but they cannot be deleted.
 
@@ -33,6 +33,6 @@ Most of the time, an AD Administrator will want to add a handful of attributes t
 
 Usually, the best practice is to create your new attributes, and then also create a new class. The new class should be an Auxiliary class. This essentially means that it can extend an existing class. 
 
-Once you create the Auxiliary class, you can bind it to an existing class. This is actually something that can be undone, so it reeduces the fear and worry of really messing up your Active Directory.
+Once you create the Auxiliary class, you can bind it to an existing class. This is actually something that can be undone, so it reduces the fear and worry of really messing up your Active Directory.
 
 Last, a quick note about Object Identifiers, also known as OID. OID's are what are used as unique identifiers of schema attributes and classes in Active Directory. They are also used in MIB's for networking. For development purposes, you can generate your own OID's. There is even a function in this module that will do it for you. However, if you are going to extend your production schema, you should register for a Private Enterprise Number. Information on this can be found at http://pen.iana.org/pen/PenApplication.page. 
