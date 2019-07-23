@@ -31,6 +31,8 @@ LONG DESCRIPTION
     http://pen.iana.org/pen/PenApplication.page. 
 
 EXAMPLES
+   
+   For Active Directory Administration:
    New-ADSchemaAttribute -Name asFavColor -Description 'User Favorite Color' -AttributeType String
    New-ADSchemaClass asPerson -AdminDescription 'Person Class to host custom attributes' -Category Auxiliary
    Add-ADSchemaAttributeToClass -Attribute asFavColor -Class asPerson
@@ -38,5 +40,12 @@ EXAMPLES
    Set-ADuser andy -add @{'asFavColor' = 'blue'}
    Get-ADuser andy -properties asFavColor
 
+   For ADLDS Administration:
+   Get-ADSchemaAttribute -class asTestClass -attribute asFavoriteColor -ADLDS $True
+   New-ADSchemaAttribute -Name as-favoriteColor -Description 'Favorite Color' -IsSingleValued $true -AttributeType String -AtributeID $oid -$ADLDS $True
+   New-ADSchemaClass -Name asPerson -AdminDescription 'host custom user attributes' -Category Auxiliary -AttributeID $oid -ADLDS $True -ADLDSService myadldsservice:1234
+   Add-ADSchemaAttributeToClass -AuxiliaryClass asTest -Class User -ADLDS $True -ADLDSService myadldsservice:1234
+   Add-ADSchemaAuxiliaryClassToClass -AuxiliaryClass asTest -Class User -ADLDS $True
+
 KEYWORDS
-    AD ActiveDirectory Schema
+    AD ActiveDirectory Schema ADLDS

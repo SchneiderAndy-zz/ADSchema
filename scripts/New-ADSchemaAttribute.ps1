@@ -1,56 +1,71 @@
 <#
 .SYNOPSIS
-   Create a new attribute in the Active Directory Schema
+    Create a new attribute in the Active Directory Schema
 
 .DESCRIPTION
-   New-ADSchemaAttribute will add a new attribute to the AD Schema. Once the new attribute
-   is created, you will need to add it to a class. AD Schema best practices suggest
-   that you:
+    New-ADSchemaAttribute will add a new attribute to the AD Schema. Once the new attribute
+    is created, you will need to add it to a class. AD Schema best practices suggest
+    that you:
 
-   1) Create a new Auxiliary Class.
-   2) Add your attribute to that class.
-   3) Add your Auxiliary Class (containing your new Attribute) to an Existing Class. 
-   
-   See help about_ADSchema for more details
+    1) Create a new Auxiliary Class.
+    2) Add your attribute to that class.
+    3) Add your Auxiliary Class (containing your new Attribute) to an Existing Class. 
+    
+    See help about_ADSchema for more details
 
 .PARAMETER Name
-  The name of the attribute you are creating. This will be the CN and the LDAP
-  Display Name. Using a standard prefix is a good practice to follow.
+    The name of the attribute you are creating. This will be the CN and the LDAP
+    Display Name. Using a standard prefix is a good practice to follow.
 
 .PARAMETER Description
-  The Administrator description is a short description that is added as metadata to the
-  attribute. Should not be much more than 3 or 4 words.
+    The Administrator description is a short description that is added as metadata to the
+    attribute. Should not be much more than 3 or 4 words.
 
 .PARAMETER IsSingleValued
-  Determine whether the new attribute can hold one value or an array of values. 
+    Determine whether the new attribute can hold one value or an array of values. 
 
 .PARAMETER AttributeType
-  Determines what type of attribute you are creating. Use a DN to create an attribute
-  that will hold a reference to another object in Active Directory. One example of an 
-  existing DN attribute is a user's manager, or a group's "ManagedBy" attribute.
-  Strings are case-insenstive.
+    Determines what type of attribute you are creating. Use a DN to create an attribute
+    that will hold a reference to another object in Active Directory. One example of an 
+    existing DN attribute is a user's manager, or a group's "ManagedBy" attribute.
+    Strings are case-insenstive.
 
 .PARAMETER AttributeID
-  AttributeID is the Object Identifier (OID) for the new attribute. OIDs have a 
-  specific syntax that looks something like '1.2.840.113556.1.8000.2554.13769.13577.20614'
-  You can use the New-ADSchemaTestOid to generate one. However, in production, you should
-  use your own OID based on your company's defined OID structure and your Private Enterprise
-  Number. For more inforation, please look at help about_ADSchema. 
+    AttributeID is the Object Identifier (OID) for the new attribute. OIDs have a 
+    specific syntax that looks something like '1.2.840.113556.1.8000.2554.13769.13577.20614'
+    You can use the New-ADSchemaTestOid to generate one. However, in production, you should
+    use your own OID based on your company's defined OID structure and your Private Enterprise
+    Number. For more inforation, please look at help about_ADSchema. 
 
  .PARAMETER SchemaAttributeHashTable
-   This parameter is the rope that will let you hang yourself if you are not careful. It is
-   for advanced users that want to generate highly customized attributes. Any of the attributes 
-   found in  https://technet.microsoft.com/en-us/library/cc961746.aspx could be used. 
-   You will need to store them in a hashtable with their corresponding values. Using a custom
-   hashtable, you can specify any of the attributes in attributeSchema objects and use any
-   attributeSyntax you want. 
+    This parameter is the rope that will let you hang yourself if you are not careful. It is
+    for advanced users that want to generate highly customized attributes. Any of the attributes 
+    found in  https://technet.microsoft.com/en-us/library/cc961746.aspx could be used. 
+    You will need to store them in a hashtable with their corresponding values. Using a custom
+    hashtable, you can specify any of the attributes in attributeSchema objects and use any
+    attributeSyntax you want. 
+
+.PARAMETER ADLDS
+    Boolean - $True to administer ADLDS 
+
+.PARAMETER ADLDSService
+    Hostname and port in format hostname:port
+    Defaults to localhost:389
+    
+.EXAMPLE
+    $oid = New-ADSchemaTestOID
+    New-ADSchemaAttribute -Name as-favoriteColor -Description 'Favorite Color' -IsSingleValued $true -AttributeType String -AtributeID $oid
+    Active Directory: Create the new Active Directory attribute named as-favoriteColor
 
 .EXAMPLE
-   $oid = New-ADSchemaTestOID
-   New-ADSchemaAttribute -Name as-favoriteColor -Description 'Favorite Color' -IsSingleValued $true -AttributeType String -AtributeID $oid
-   
+    $oid = New-ADSchemaTestOID
+    New-ADSchemaAttribute -Name as-favoriteColor -Description 'Favorite Color' -IsSingleValued $true -AttributeType String -AtributeID $oid -$ADLDS $True
+    ADLDS: Create the new attribute named as-favoriteColor in the default ADLDS instance on localhost:389
+
 .EXAMPLE
-   $hash - Get-ADSchemaClass com*
+    $oid = New-ADSchemaTestOID
+    New-ADSchemaAttribute -Name as-favoriteColor -Description 'Favorite Color' -IsSingleValued $true -AttributeType String -AtributeID $oid -$ADLDS $True -ADLDSService myadldsservice:1234
+    ADLDS: Create the new attribute named as-favoriteColor in an ADLDS instance named myadldsservice:1234
 #>
 
 Function New-ADSchemaAttribute {
@@ -73,7 +88,7 @@ Function New-ADSchemaAttribute {
         $IsSingleValued = $True,
 
         [Parameter(Mandatory, ValueFromPipelinebyPropertyName, ParameterSetName = 'basic')]
-        [ValidateSet('String','StringOctet','DN','Int','GeneralizedTime','Boolean')]
+        [ValidateSet('String','UnicodeString','StringOctet','DN','Int','GeneralizedTime','Boolean')]
         [String]
         $AttributeType ,
 
@@ -84,14 +99,31 @@ Function New-ADSchemaAttribute {
 
         [Parameter(ValueFromPipelineByPropertyName,ParameterSetName = 'advanced')]
         [String]
-        $SchemaAttributeHashTable
+        $SchemaAttributeHashTable,
+		
+		[Parameter(Mandatory=$False)]
+		[Boolean]$ADLDS,
+		
+		[Parameter(Mandatory=$False)]
+		[String]$ADLDSService
     )
 
     BEGIN {}
 
     PROCESS {
-  
+		If (!$ADLDS)
+		{
         $schemaPath = (Get-ADRootDSE).schemaNamingContext       
+		}
+		ElseIf ($ADLDS -eq $True) 
+		{
+			If (!$ADLDSService)
+			{
+				$ADLDSService = 'localhost:389'
+			}
+			$DirectoryContext = New-Object System.DirectoryServices.ActiveDirectory.DirectoryContext([System.DirectoryServices.ActiveDirectory.DirectoryContextType]::DirectoryServer, $ADLDSService)
+			$schemaPath = [System.DirectoryServices.ActiveDirectory.ActiveDirectorySchema]::GetSchema($DirectoryContext)
+		}
         $type = 'attributeSchema'
         if($SchemaAttributeHashTable){
             $attributes = $SchemaAttributeHashTable
@@ -100,6 +132,7 @@ Function New-ADSchemaAttribute {
              # based on https://technet.microsoft.com/en-us/library/cc961740.aspx
             switch ($AttributeType) {
                 'String'            {$attributeSyntax = '2.5.5.4';  $omSyntax = 20}
+                'UnicodeString'     {$attributeSyntax = '2.5.5.12'; $omSyntax = 64}
                 'StringOctet'       {$attributeSyntax = '2.5.5.10'; $omSyntax = 4}
                 'DN'                {$attributeSyntax = '2.5.5.1';  $omSyntax = 127}
                 'Int'               {$attributeSyntax = '2.5.5.9';  $omSyntax = 2}
@@ -126,11 +159,17 @@ Function New-ADSchemaAttribute {
            Write-Warning 'You are using a test OID. For Production use, use an OID with your registered PEN. See help about_adschema for more details. ' 
         }
        
-        if ($PSCmdlet.ShouldProcess($ConfirmationMessage, $Caption)) {
-            New-ADObject -Name $Name -Type $type -Path $schemapath -OtherAttributes $attributes 
+        if ($PSCmdlet.ShouldProcess($ConfirmationMessage, $Caption)) 
+        {
+            If (!$ADLDS)
+            {
+            New-ADObject -Name $Name -Type $type -Path $schemapath -OtherAttributes $attributes
+            }
+            ElseIf ($ADLDS -eq $True) 
+            {
+            New-ADObject -Name $Name -Type $type -Path $schemapath -Server $ADLDSService -OtherAttributes $attributes
+            }
         }
     }
-
     END {}
-    
-}
+    }
